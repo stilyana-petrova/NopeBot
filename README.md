@@ -9,6 +9,7 @@ NopeBotProject is an ASP.NET Core MVC (v8) web application designed to help user
 - Generate a ChatGPT response.
 - Refresh if you want a different reply.
 - Approve and copy the response.
-- Manually send the reply from your social media account.
+- Manually send the reply from your social media account if not allowed to be sent.
+- Report suspicious accounts and add it to the blacklist visible for all users.
 - Admin can manage users and delete inappropriate messages.
 
