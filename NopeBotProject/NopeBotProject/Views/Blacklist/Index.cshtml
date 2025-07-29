@@ -1,0 +1,25 @@
+﻿@model IEnumerable<NopeBotProject.Infrastructure.Data.Entities.BlacklistEntry>
+@{
+    ViewData["Title"] = "Index";
+}
+<h2>Reported Senders</h2>
+
+<table class="table">
+    <tr>
+        <th>Username</th>
+        <th>Platform</th>
+        <th>Reports</th>
+        <th>Actions</th>
+    </tr>
+    @foreach (var entry in Model)
+    {
+        <tr>
+            <td>@entry.SenderUsername</td>
+            <td>@entry.Platform</td>
+            <td>@entry.ReportCount</td>
+            <td>
+                <a asp-controller="SenderReports" asp-action="Create" asp-route-blacklistEntryId="@entry.Id">Report</a>
+            </td>
+        </tr>
+    }
+</table>

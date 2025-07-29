@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace NopeBotProject.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class updated1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -30,7 +30,6 @@ namespace NopeBotProject.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Discriminator = table.Column<string>(type: "nvarchar(21)", maxLength: 21, nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -49,6 +48,37 @@ namespace NopeBotProject.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BlacklistEntries",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SenderUsername = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Platform = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ProfileLink = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Reason = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ReportCount = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BlacklistEntries", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TonePresets",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TonePresets", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -163,14 +193,21 @@ namespace NopeBotProject.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Text = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ReceivedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Platform = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SenderUsername = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SenderProfileLink = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Status = table.Column<int>(type: "int", nullable: false),
+                    ReceivedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsSuspicious = table.Column<bool>(type: "bit", nullable: false),
+                    IsReplied = table.Column<bool>(type: "bit", nullable: false),
                     ApprovedReply = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ApplicationUser = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsReplySent = table.Column<bool>(type: "bit", nullable: false),
+                    ReplySentAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Tone = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ChatGptReply1 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ChatGptReply2 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ChatGptReply3 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AbuseFlags = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
@@ -184,31 +221,31 @@ namespace NopeBotProject.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AIReplies",
+                name: "SenderReports",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Tone = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Response = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    GeneratedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    MessageId = table.Column<int>(type: "int", nullable: false)
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    BlacklistEntryId = table.Column<int>(type: "int", nullable: false),
+                    ReportedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Notes = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AIReplies", x => x.Id);
+                    table.PrimaryKey("PK_SenderReports", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AIReplies_Messages_MessageId",
-                        column: x => x.MessageId,
-                        principalTable: "Messages",
+                        name: "FK_SenderReports_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_SenderReports_BlacklistEntries_BlacklistEntryId",
+                        column: x => x.BlacklistEntryId,
+                        principalTable: "BlacklistEntries",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AIReplies_MessageId",
-                table: "AIReplies",
-                column: "MessageId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -253,14 +290,21 @@ namespace NopeBotProject.Infrastructure.Migrations
                 name: "IX_Messages_UserId",
                 table: "Messages",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SenderReports_BlacklistEntryId",
+                table: "SenderReports",
+                column: "BlacklistEntryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SenderReports_UserId",
+                table: "SenderReports",
+                column: "UserId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "AIReplies");
-
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -280,10 +324,19 @@ namespace NopeBotProject.Infrastructure.Migrations
                 name: "Messages");
 
             migrationBuilder.DropTable(
+                name: "SenderReports");
+
+            migrationBuilder.DropTable(
+                name: "TonePresets");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "BlacklistEntries");
         }
     }
 }

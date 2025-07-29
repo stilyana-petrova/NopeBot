@@ -22,9 +22,7 @@ namespace NopeBotProject.Infrastructure.Data.Infrastructure
             await RoleSeeder(services);
             await SeedAdmin(services);
 
-            var datareply = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-            SeedReplies(datareply);
-
+          
             return app;
         }
         private static async Task RoleSeeder(IServiceProvider serviceProvider)
@@ -45,15 +43,15 @@ namespace NopeBotProject.Infrastructure.Data.Infrastructure
         }
         private static async Task SeedAdmin(IServiceProvider serviceProvider)
         {
-            var userManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
-            if (await userManager.FindByNameAsync("admin") == null)
+            var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            if (await userManager.FindByNameAsync("admin@admin.com") == null)
             {
-                IdentityUser user = new IdentityUser();
-                user.UserName = "admin";
+                ApplicationUser user = new ApplicationUser();
+                user.UserName = "admin@admin.com";
                 user.Email = "admin@admin.com";
-                user.PhoneNumber = "0888898898";
+               
 
-                var result = await userManager.CreateAsync(user, "admin");
+                var result = await userManager.CreateAsync(user, "admin123");
                 if (result.Succeeded)
                 {
                     userManager.AddToRoleAsync(user, "Admin").Wait();
@@ -61,21 +59,7 @@ namespace NopeBotProject.Infrastructure.Data.Infrastructure
             }
         }
 
-        private static void SeedReplies(ApplicationDbContext datareply)
-        {
-            if(datareply.AIReplies.Any())
-            {
-                return; // DB has been seeded
-            }
-            datareply.AIReplies.AddRange(new[]
-            {
-              new AIReply {Tone = "Sarcastic"},
-              new AIReply {Tone = "Security Bot"},
-              new AIReply {Tone = "Police Bot"}
-             
-            });
-            datareply.SaveChanges();
-        }
+        
     }
 
 }

@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35521.163 d17.12
+VisualStudioVersion = 17.12.35521.163
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NopeBotProject", "NopeBotProject\NopeBotProject.csproj", "{EC260CBB-7AD3-4842-BD42-DF9D5302A7E8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NopeBotProject.Infrastructure", "NopeBot.Infrastructure\NopeBotProject.Infrastructure.csproj", "{7FE85006-3158-483D-B352-FCA6F93806A3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NopeBotProject.Core", "NopeBotProject.Core\NopeBotProject.Core.csproj", "{C7642B76-66A6-45E9-AD24-66E94F28E7ED}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{7FE85006-3158-483D-B352-FCA6F93806A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7FE85006-3158-483D-B352-FCA6F93806A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7FE85006-3158-483D-B352-FCA6F93806A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7642B76-66A6-45E9-AD24-66E94F28E7ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7642B76-66A6-45E9-AD24-66E94F28E7ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7642B76-66A6-45E9-AD24-66E94F28E7ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7642B76-66A6-45E9-AD24-66E94F28E7ED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

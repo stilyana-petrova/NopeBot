@@ -1,0 +1,31 @@
+﻿@model IEnumerable<NopeBotProject.Infrastructure.Data.Entities.Message>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>My Suspicious Messages</h2>
+<a asp-action="Create" class="btn btn-primary mb-2">+ Add Message</a>
+
+<table class="table table-bordered">
+    <tr>
+        <th>Sender</th>
+        <th>Platform</th>
+        <th>Received</th>
+        <th>Replied</th>
+        <th></th>
+    </tr>
+    @foreach (var msg in Model)
+    {
+        <tr>
+            <td>@msg.SenderUsername</td>
+            <td>@msg.Platform</td>
+            <td>@msg.ReceivedAt</td>
+            <td>@(msg.IsReplied ? "✔" : "❌")</td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@msg.Id">Edit</a> |
+                <a asp-action="Delete" asp-route-id="@msg.Id">Delete</a>
+            </td>
+        </tr>
+    }
+</table>

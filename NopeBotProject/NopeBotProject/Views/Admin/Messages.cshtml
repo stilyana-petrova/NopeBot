@@ -1,0 +1,23 @@
+﻿@model IEnumerable<NopeBotProject.Infrastructure.Data.Entities.Message>
+@{
+    ViewData["Title"] = "Messages";
+}
+<h2>All Suspicious Messages</h2>
+
+<table class="table">
+    <tr>
+        <th>User</th>
+        <th>Sender</th>
+        <th>Content</th>
+        <th>Replied</th>
+    </tr>
+    @foreach (var msg in Model)
+    {
+        <tr>
+            <td>@msg.UserId</td>
+            <td>@msg.SenderUsername</td>
+            <td>@msg.Content</td>
+            <td>@(msg.IsReplied ? "✔" : "❌")</td>
+        </tr>
+    }
+</table>

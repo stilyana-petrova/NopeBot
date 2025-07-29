@@ -1,0 +1,25 @@
+﻿@model IEnumerable<NopeBotProject.Infrastructure.Data.Entities.SenderReport>
+@{
+    ViewData["Title"] = "Sender Reports";
+
+}
+
+<h2>My Reports</h2>
+
+<table class="table">
+    <tr>
+        <th>Sender</th>
+        <th>Platform</th>
+        <th>Reported At</th>
+        <th>Notes</th>
+    </tr>
+    @foreach (var report in Model)
+    {
+        <tr>
+            <td>@report.BlacklistEntry.SenderUsername</td>
+            <td>@report.BlacklistEntry.Platform</td>
+            <td>@report.ReportedAt</td>
+            <td>@report.Notes</td>
+        </tr>
+    }
+</table>
